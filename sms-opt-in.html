@@ -29,7 +29,7 @@
     nav { font-size: 14px; margin-bottom: 40px; }
     figure { margin: 28px 0; }
     figure img {
-      display: block; width: 100%; max-width: 300px;
+      display: block; width: 100%; max-width: 280px;
       border: 1px solid #e5e5e5; border-radius: 10px;
     }
     figcaption { font-size: 14px; color: #666; margin-top: 8px; }
@@ -67,21 +67,22 @@
   <h2>How users opt in</h2>
   <ol>
     <li>
-      On the welcome screen of the DataProQ application, the user selects
-      <strong>Continue with phone</strong>. Phone sign-in is one of four
-      options; it is never required.
+      On the welcome screen the user selects <strong>Continue with phone</strong>.
+      Phone sign-in is one of four options and is never required.
     </li>
     <li>
-      The user enters their own mobile number. Before continuing, the consent
-      disclosure below is displayed directly beneath the number field.
+      The user enters their own mobile number. The consent disclosure below is
+      shown directly beneath the number field, above the button.
     </li>
     <li>
-      The user taps <strong>Continue</strong>, which is the affirmative act of
-      consent. We record the date, time and method of that consent.
+      The user taps <strong>Continue</strong>, then <strong>Send code</strong>.
+      The disclosure is shown again above the Send code button. Tapping Send
+      code is the affirmative act of consent, and we record the date, time and
+      method.
     </li>
     <li>
       A one-time passcode is sent to the number entered. The user enters the
-      code to complete sign-in.
+      code to finish signing in.
     </li>
   </ol>
 
@@ -93,26 +94,37 @@
     See our <a href="/terms.html">Terms of Service</a> and
     <a href="/privacy.html">Privacy Policy</a>.
   </div>
+  <p class="muted">
+    The same disclosure is shown again before the code is sent, with "Send code"
+    in place of "Continue".
+  </p>
 
   <h2>Screenshots of the opt-in flow</h2>
 
   <figure>
     <img src="/img/optin-1-welcome.png"
-         alt="DataProQ welcome screen with Continue with Apple, Google, phone and email options">
+         alt="Welcome screen offering Continue with Apple, Google, phone or email">
     <figcaption>1. Welcome screen. Phone sign-in is optional.</figcaption>
   </figure>
 
   <figure>
     <img src="/img/optin-2-phone.png"
-         alt="Phone number entry screen showing the SMS consent disclosure beneath the number field">
-    <figcaption>2. Number entry, with the consent disclosure shown above the
+         alt="Phone number entry with the SMS consent disclosure shown above the Continue button">
+    <figcaption>2. Number entry, with the consent disclosure above the
     Continue button.</figcaption>
   </figure>
 
   <figure>
-    <img src="/img/optin-3-code.png"
+    <img src="/img/optin-3-send.png"
+         alt="Confirmation screen repeating the SMS consent disclosure above the Send code button">
+    <figcaption>3. The disclosure is repeated above Send code, which is the
+    affirmative consent action.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="/img/optin-4-code.png"
          alt="Passcode entry screen after the one-time code has been sent">
-    <figcaption>3. Passcode entry after the code is sent.</figcaption>
+    <figcaption>4. Passcode entry after the code is sent.</figcaption>
   </figure>
 
   <h2>Message frequency</h2>
@@ -138,8 +150,8 @@
     also reply CANCEL, QUIT, OPTOUT, UNSUBSCRIBE, STOPALL, REVOKE or END. Reply
     <strong>START</strong> to resubscribe. Reply <strong>HELP</strong> for help,
     or email <a href="mailto:joe@dataproqllc.com">joe@dataproqllc.com</a>.
-    Opting out of messages does not delete your account; you can still sign in
-    with Apple, Google or email.
+    Opting out does not delete your account; you can still sign in with Apple,
+    Google or email.
   </p>
 
   <h2>Carriers</h2>
