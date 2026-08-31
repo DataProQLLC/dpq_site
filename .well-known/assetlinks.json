@@ -1,0 +1,24 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.dataproqllc.finapp",
+        "sha256_cert_fingerprints": [
+          "RELEASE_SHA256_HERE",
+          "UPLOAD_SHA256_HERE"
+        ]
+      }
+    },
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.dataproqllc.finapp.dev",
+        "sha256_cert_fingerprints": [
+          "1C:6F:B0:A4:A4:63:AA:D2:4B:67:0A:22:E9:34:F8:02:6F:08:8E:65:7D:2D:7C:89:A7:2D:F5:29:20:6C:FE:78"
+        ]
+      }
+    }
+  ]
+  
