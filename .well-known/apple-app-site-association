@@ -19,9 +19,8 @@
   },
   "webcredentials": {
     "apps": [
-      "F6N7G72CZK.com.dataproqllc.finapp",
-      "F6N7G72CZK.com.dataproqllc.finapp.staging",
-      "F6N7G72CZK.com.dataproqllc.finapp.dev"
+      "F6N7G72CZK.com.dataproqllc.waterline.staging",
+      "F6N7G72CZK.com.dataproqllc.waterline"
     ]
   }
 }
