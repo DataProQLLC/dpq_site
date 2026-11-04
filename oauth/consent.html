@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <!-- GitHub Pages can't send headers, so the policy lives here.
+       Only the pinned supabase-js bundle and this page's own script may run,
+       and the page may only talk to the Supabase project. -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/;
+    style-src 'self' 'unsafe-inline';
+    connect-src https://omxtckxgcybejfnyngxq.supabase.co;
+    img-src 'self';
+    form-action 'none';
+    base-uri 'none'">
+  <title>Authorize access — DataProQ LLC</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 460px; margin: 0 auto; padding: 72px 24px;
+      line-height: 1.6; color: #1a1a1a; background: #fff;
+    }
+    h1 { font-size: 22px; margin: 0 0 8px; letter-spacing: -0.3px; }
+    p { color: #444; font-size: 15px; margin: 8px 0; }
+    .muted { color: #666; font-size: 13px; }
+    a { color: #1a6b4f; }
+    [hidden] { display: none !important; }
+
+    label { display: block; font-size: 14px; font-weight: 600; margin: 18px 0 6px; }
+    input {
+      width: 100%; box-sizing: border-box; font: inherit; font-size: 16px;
+      padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px;
+    }
+    input:focus { outline: 2px solid #1a6b4f; outline-offset: 1px; border-color: #1a6b4f; }
+
+    button {
+      font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+      padding: 11px 18px; border-radius: 8px; border: 1px solid #1a6b4f;
+      background: #1a6b4f; color: #fff;
+    }
+    button.secondary { background: #fff; color: #1a1a1a; border-color: #ccc; }
+    button:disabled { opacity: 0.55; cursor: default; }
+    .row { display: flex; gap: 10px; margin-top: 18px; }
+    .row button { flex: 1; }
+    .linkish {
+      background: none; border: 0; padding: 0; color: #1a6b4f;
+      font-weight: 400; font-size: 13px; text-decoration: underline;
+    }
+
+    .tabs { display: flex; gap: 6px; margin-top: 20px; }
+    .tabs button {
+      flex: 1; background: #fff; color: #444; border-color: #ddd; font-weight: 500;
+    }
+    .tabs button[aria-selected="true"] { border-color: #1a6b4f; color: #1a6b4f; background: #f6faf8; }
+
+    .card {
+      border: 1px solid #e5e5e5; border-radius: 10px; padding: 16px 18px; margin: 20px 0;
+    }
+    .client-name { font-size: 17px; font-weight: 600; margin: 0; color: #1a1a1a; }
+    .kv { font-size: 13px; color: #666; margin: 4px 0 0; word-break: break-all; }
+    .kv strong { color: #1a1a1a; font-weight: 600; }
+
+    ul.scopes { padding-left: 20px; margin: 8px 0 0; }
+    ul.scopes li { margin: 4px 0; font-size: 14px; color: #333; }
+
+    .warn {
+      border-left: 3px solid #b45309; background: #fffaf0;
+      padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #5c3a06;
+    }
+    .note {
+      border-left: 3px solid #1a6b4f; background: #f6faf8;
+      padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #244;
+    }
+    .error {
+      border-left: 3px solid #b42318; background: #fef3f2;
+      padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #7a271a;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="title">Authorize access</h1>
+    <p id="status">Loading…</p>
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <!-- Step 1: sign in (only shown when there is no session) -->
+    <section id="signin" hidden>
+      <p>Sign in to your <span class="app-name"></span> account to continue.</p>
+
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-phone" aria-selected="true">Phone</button>
+        <button type="button" role="tab" id="tab-email" aria-selected="false">Email</button>
+      </div>
+
+      <form id="send-form" novalidate>
+        <div id="phone-field">
+          <label for="phone">Mobile number</label>
+          <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(215) 555-0123">
+        </div>
+        <div id="email-field" hidden>
+          <label for="email">Email</label>
+          <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+        </div>
+        <div class="row"><button type="submit" id="send-btn">Send code</button></div>
+        <p class="muted" id="sms-note">
+          We'll text you a one-time code. Msg &amp; data rates may apply.
+        </p>
+      </form>
+
+      <form id="verify-form" novalidate hidden>
+        <label for="code">Enter the code we sent to <span id="sent-to"></span></label>
+        <input id="code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="10">
+        <div class="row"><button type="submit" id="verify-btn">Verify</button></div>
+        <p><button type="button" class="linkish" id="restart-btn">Use a different number or email</button></p>
+      </form>
+    </section>
+
+    <!-- Step 2: consent -->
+    <section id="consent" hidden>
+      <div class="card">
+        <p class="client-name" id="client-name"></p>
+        <p class="kv">Wants to access your <span class="app-name"></span> account</p>
+        <p class="kv"><strong>Will return you to:</strong> <span id="redirect-host"></span></p>
+        <p class="kv" id="client-site-row" hidden><strong>Website:</strong> <span id="client-site"></span></p>
+      </div>
+
+      <div id="unknown-warning" class="warn" hidden>
+        <strong>We don't recognize this app.</strong> Only approve it if you set
+        it up yourself just now. An app can choose any name it likes, so check the
+        address above.
+      </div>
+
+      <p><strong>It will be able to:</strong></p>
+      <ul class="scopes" id="scopes"></ul>
+
+      <div class="note">
+        It acts as you and can only see your own data.
+      </div>
+
+      <p class="muted">Signed in as <strong id="who"></strong> ·
+        <button type="button" class="linkish" id="signout-btn">Not you?</button></p>
+
+      <div class="row">
+        <button type="button" class="secondary" id="deny-btn">Deny</button>
+        <button type="button" id="approve-btn">Approve</button>
+      </div>
+    </section>
+
+    <p class="muted" style="margin-top:40px"><a href="/">DataProQ LLC</a> ·
+      <a href="/privacy.html">Privacy</a></p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"
+          integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK"
+          crossorigin="anonymous"></script>
+  <script src="/oauth/consent.js"></script>
+</body>
+</html>
