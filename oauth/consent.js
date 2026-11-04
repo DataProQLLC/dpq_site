@@ -80,58 +80,36 @@
   });
 
   // ---- sign-in ------------------------------------------------------------
-  let mode = 'phone';
-  let sentTo = null; // { phone } or { email }
+  let sentTo = null;
 
-  function setMode(next) {
-    mode = next;
-    $('tab-phone').setAttribute('aria-selected', String(mode === 'phone'));
-    $('tab-email').setAttribute('aria-selected', String(mode === 'email'));
-    show($('phone-field'), mode === 'phone');
-    show($('email-field'), mode === 'email');
-    show($('sms-note'), mode === 'phone');
-    clearError();
-  }
-  $('tab-phone').addEventListener('click', () => setMode('phone'));
-  $('tab-email').addEventListener('click', () => setMode('email'));
-
-  function normalizePhone(raw) {
-    const trimmed = raw.trim();
-    const digits = trimmed.replace(/\D/g, '');
-    if (trimmed.startsWith('+')) return digits.length >= 8 ? '+' + digits : null;
-    if (digits.length === 10) return '+1' + digits;
-    if (digits.length === 11 && digits.startsWith('1')) return '+' + digits;
-    return null;
-  }
+  // Your send-email hook sees this as email_data.redirect_to, so it can use
+  // the code-only OAuth template instead of the app's normal sign-in email.
+  // Add it under Authentication > URL Configuration > Redirect URLs.
+  const CONSENT_URL = 'https://dataproqllc.com/oauth/consent';
 
   $('send-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     clearError();
-    let payload;
-    if (mode === 'phone') {
-      const phone = normalizePhone($('phone').value);
-      if (!phone) return showError('Enter a mobile number, e.g. (215) 555-0123.');
-      payload = { phone };
-    } else {
-      const email = $('email').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Enter a valid email address.');
-      payload = { email };
-    }
+    const email = $('email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Enter a valid email address.');
 
     $('send-btn').disabled = true;
     // shouldCreateUser: false — this page only signs in existing accounts.
-    const { error } = await sb.auth.signInWithOtp({ ...payload, options: { shouldCreateUser: false } });
+    const { error } = await sb.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false, emailRedirectTo: CONSENT_URL },
+    });
     $('send-btn').disabled = false;
     if (error) {
       return showError(
         /signups? not allowed|not found/i.test(error.message)
-          ? `No ${APP_NAME} account uses that ${mode === 'phone' ? 'number' : 'email'}. Sign in the same way you do in the app.`
+          ? `No ${APP_NAME} account uses that email. Add email sign-in in the ${APP_NAME} app first, then try again.`
           : error.message
       );
     }
 
-    sentTo = payload;
-    $('sent-to').textContent = payload.phone || payload.email;
+    sentTo = email;
+    $('sent-to').textContent = email;
     show($('send-form'), false);
     show($('verify-form'), true);
     $('code').value = '';
@@ -145,9 +123,7 @@
     if (!/^\d{6,10}$/.test(token)) return showError('Enter the code from your message.');
 
     $('verify-btn').disabled = true;
-    const { error } = await sb.auth.verifyOtp(
-      sentTo.phone ? { phone: sentTo.phone, token, type: 'sms' } : { email: sentTo.email, token, type: 'email' }
-    );
+    const { error } = await sb.auth.verifyOtp({ email: sentTo, token, type: 'email' });
     $('verify-btn').disabled = false;
     if (error) return showError(error.message);
 
