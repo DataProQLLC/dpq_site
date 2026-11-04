@@ -90,31 +90,18 @@
     <section id="signin" hidden>
       <p>Sign in to your <span class="app-name"></span> account to continue.</p>
 
-      <div class="tabs" role="tablist">
-        <button type="button" role="tab" id="tab-phone" aria-selected="true">Phone</button>
-        <button type="button" role="tab" id="tab-email" aria-selected="false">Email</button>
-      </div>
-
       <form id="send-form" novalidate>
-        <div id="phone-field">
-          <label for="phone">Mobile number</label>
-          <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(215) 555-0123">
-        </div>
-        <div id="email-field" hidden>
-          <label for="email">Email</label>
-          <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
-        </div>
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
         <div class="row"><button type="submit" id="send-btn">Send code</button></div>
-        <p class="muted" id="sms-note">
-          We'll text you a one-time code. Msg &amp; data rates may apply.
-        </p>
+        <p class="muted">We'll email you a one-time code.</p>
       </form>
 
       <form id="verify-form" novalidate hidden>
         <label for="code">Enter the code we sent to <span id="sent-to"></span></label>
         <input id="code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="10">
         <div class="row"><button type="submit" id="verify-btn">Verify</button></div>
-        <p><button type="button" class="linkish" id="restart-btn">Use a different number or email</button></p>
+        <p><button type="button" class="linkish" id="restart-btn">Use a different email</button></p>
       </form>
     </section>
 
