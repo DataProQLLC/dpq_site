@@ -128,7 +128,7 @@
     if (error) return showError(error.message);
 
     show($('signin'), false);
-    await loadConsent();
+    await afterSignIn();
   });
 
   $('restart-btn').addEventListener('click', () => {
@@ -136,6 +136,98 @@
     clearError();
     show($('verify-form'), false);
     show($('send-form'), true);
+  });
+
+  // ---- two-step verification ------------------------------------------------
+  // With two-step on, an emailed code alone isn't enough to hand an app their
+  // data: they enter the second step too (as in the Waterline app).
+
+  /// Whether this session still owes its second step.
+  async function needsTwoStep() {
+    const { data, error } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (error) throw error;
+    return data.nextLevel === 'aal2' && data.currentLevel !== 'aal2';
+  }
+
+  async function afterSignIn() {
+    try {
+      if (await needsTwoStep()) return showTwoStep();
+    } catch (error) {
+      setStatus('');
+      return showError(error.message || 'Could not check your sign-in. Reload and try again.');
+    }
+    await loadConsent();
+  }
+
+  let authenticators = [];   // their authenticator apps (TOTP)
+  let phones = [];           // phone numbers set up for two-step
+  let texted = null;         // {factorId, challengeId} once a code's been texted
+
+  async function showTwoStep() {
+    setStatus('');
+    $('title').textContent = 'Two-step verification';
+    show($('signin'), false);
+    show($('consent'), false);
+    texted = null;
+    const { data, error } = await sb.auth.mfa.listFactors();
+    if (error) return showError(error.message);
+    authenticators = data.totp || [];
+    phones = data.phone || [];
+    $('mfa-label').textContent = authenticators.length
+      ? 'Code from your authenticator app'
+      : 'We’ll text a code to your phone';
+    $('mfa-btn').textContent = authenticators.length ? 'Verify' : 'Text me a code';
+    show($('mfa-code'), authenticators.length > 0);
+    show($('text-me-row'), authenticators.length > 0 && phones.length > 0);
+    $('mfa-code').value = '';
+    show($('two-step'), true);
+    if (authenticators.length) $('mfa-code').focus();
+  }
+
+  async function textCode() {
+    clearError();
+    const factor = phones[0];
+    const { data, error } = await sb.auth.mfa.challenge({ factorId: factor.id });
+    if (error) return showError(error.message);
+    texted = { factorId: factor.id, challengeId: data.id };
+    const last4 = (factor.phone || '').slice(-4);
+    $('mfa-label').textContent = last4 ? `Code we texted to the number ending ${last4}` : 'Code we texted you';
+    $('mfa-btn').textContent = 'Verify';
+    show($('mfa-code'), true);
+    show($('text-me-row'), false);
+    $('mfa-code').value = '';
+    $('mfa-code').focus();
+  }
+  $('text-me-btn').addEventListener('click', textCode);
+
+  $('mfa-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+    if (!authenticators.length && !texted) return textCode();
+    const code = $('mfa-code').value.replace(/\s/g, '');
+    if (!/^\d{6}$/.test(code)) return showError('Enter the 6-digit code.');
+    $('mfa-btn').disabled = true;
+    let error = null;
+    if (texted) {
+      ({ error } = await sb.auth.mfa.verify({ ...texted, code }));
+    } else {
+      // A code from any of their authenticator apps: each is tried until one
+      // takes it (as the app does).
+      for (const [i, factor] of authenticators.entries()) {
+        ({ error } = await sb.auth.mfa.challengeAndVerify({ factorId: factor.id, code }));
+        if (!error || error.code !== 'mfa_verification_failed' || i === authenticators.length - 1) break;
+      }
+    }
+    $('mfa-btn').disabled = false;
+    if (error) {
+      $('mfa-code').value = '';
+      return showError(error.code === 'mfa_verification_failed'
+        ? 'That code didn’t work. Use the newest one from your authenticator app.'
+        : error.message);
+    }
+    show($('two-step'), false);
+    $('title').textContent = 'Authorize access';
+    await loadConsent();
   });
 
   // ---- consent ------------------------------------------------------------
@@ -215,6 +307,13 @@
 
   async function decide(approve) {
     clearError();
+    // Checked again here, so nothing gets past the step (a session from
+    // another tab of this site, say).
+    if (approve) {
+      let owes;
+      try { owes = await needsTwoStep(); } catch (error) { return showError(error.message); }
+      if (owes) return showTwoStep();
+    }
     $('approve-btn').disabled = true;
     $('deny-btn').disabled = true;
     setStatus(approve ? 'Approving…' : 'Denying…');
@@ -237,19 +336,25 @@
   $('approve-btn').addEventListener('click', () => decide(true));
   $('deny-btn').addEventListener('click', () => decide(false));
 
-  $('signout-btn').addEventListener('click', async () => {
+  async function signOut() {
     await sb.auth.signOut({ scope: 'local' });
     show($('consent'), false);
+    show($('two-step'), false);
     $('title').textContent = 'Authorize access';
+    clearError();
     setStatus('');
+    show($('verify-form'), false);
+    show($('send-form'), true);
     show($('signin'), true);
-  });
+  }
+  $('signout-btn').addEventListener('click', signOut);
+  $('mfa-signout-btn').addEventListener('click', signOut);
 
   // ---- start --------------------------------------------------------------
   (async () => {
     const { data } = await sb.auth.getSession();
     if (data && data.session) {
-      await loadConsent();
+      await afterSignIn();
     } else {
       setStatus('');
       show($('signin'), true);
