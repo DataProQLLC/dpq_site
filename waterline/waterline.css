@@ -1,0 +1,57 @@
+/* Waterline on the web: the sign-in card over a navy band. */
+
+.band { max-width: 520px; margin: 0 auto; padding: 28px var(--gutter) 84px; text-align: center; }
+.band h1 { color: var(--paper); font-size: 30px; margin: 0 0 6px; }
+.band p { color: rgba(248, 246, 241, 0.82); margin: 0; font-size: 16px; }
+
+.panel {
+  position: relative; max-width: 440px; margin: -60px auto 0;
+  box-shadow: 0 10px 30px rgba(27, 35, 73, 0.10);
+}
+@media (max-width: 480px) {
+  .panel { margin-left: var(--gutter); margin-right: var(--gutter); padding: 20px; }
+}
+
+.panel form .button { margin-top: 18px; }
+.small { font-size: 14px; margin: 14px 0 0; }
+.fine { margin-top: 22px; line-height: 1.55; }
+#status { margin: 0; }
+#status:empty { display: none; }
+
+.or { display: flex; align-items: center; gap: 12px; color: var(--slate); font-size: 13px; margin: 18px 0 4px; }
+.or::before, .or::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+
+.tabs { display: flex; gap: 6px; margin-top: 12px; background: #F1EEE6; padding: 4px; border-radius: 10px; }
+.tabs button {
+  flex: 1; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  border: 0; border-radius: 8px; padding: 9px 8px; background: transparent; color: var(--slate);
+}
+.tabs button[aria-selected="true"] { background: var(--card); color: var(--navy); box-shadow: 0 1px 2px rgba(27, 35, 73, 0.12); }
+
+#code, #mfa-code { font-family: var(--mono); font-size: 20px; letter-spacing: 4px; text-align: center; }
+
+.facts { margin: 0; }
+.facts > div {
+  display: flex; flex-wrap: wrap; gap: 2px 16px; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--line);
+}
+.facts > div:first-child { padding-top: 0; }
+.facts dt { color: var(--slate); font-size: 14px; }
+.facts dd { margin: 0; font-weight: 600; text-align: right; overflow-wrap: anywhere; min-width: 0; }
+.facts dd .sub { display: block; font-weight: 400; font-size: 13px; color: var(--slate); }
+
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+@media (max-width: 400px) { .tiles { grid-template-columns: 1fr; } }
+.tile {
+  display: block; border: 1px solid var(--line); border-radius: 10px; padding: 14px;
+  text-decoration: none; color: var(--ink); background: var(--card);
+}
+a.tile:hover { border-color: var(--navy); color: var(--ink); }
+.tile strong { display: block; color: var(--navy); }
+.tile span { display: block; font-size: 13px; color: var(--slate); margin-top: 2px; line-height: 1.45; }
+.tile em {
+  font-style: normal; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  background: var(--gold); color: var(--navy); border-radius: 999px; padding: 1px 7px; margin-left: 4px;
+  vertical-align: 2px;
+}
+.tile.soon { background: #FBFAF6; }

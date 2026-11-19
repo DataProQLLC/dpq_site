@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <!-- GitHub Pages can't send headers, so the policy lives here. Only the
+       pinned Swagger UI and this site's own files run, and requests go only
+       to the Waterline API. -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    script-src 'self' https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/;
+    img-src 'self' data:;
+    connect-src https://omxtckxgcybejfnyngxq.supabase.co;
+    form-action 'none';
+    base-uri 'none'">
+  <title>Waterline API — DataProQ LLC</title>
+  <meta name="description" content="The Waterline API: read your books, accounts, transactions and Plan from your own code.">
+  <meta name="theme-color" content="#1B2349">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/img/brand/dataproq-icon-gold.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/swagger-ui.css"
+        integrity="sha384-4c3vsE5f+trhFyHrFrLM1fFGUn531NIaC7dcqEWIJdoRQJ5CkJbSuSCwXLpaS1KF"
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/brand.css">
+  <link rel="stylesheet" href="/waterline/api/docs.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the docs</a>
+
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="/" aria-label="DataProQ LLC home">
+        <picture>
+          <source media="(max-width: 560px)" srcset="/img/brand/dataproq-icon-gold.svg">
+          <img src="/img/brand/dataproq-logo-for-dark-bg.svg" alt="DataProQ LLC" width="122" height="32">
+        </picture>
+      </a>
+      <a class="product" href="/waterline/api/">
+        <img src="/img/brand/waterline-mark.svg" alt="" width="22" height="22">
+        <span>Waterline API</span>
+      </a>
+      <nav class="site-nav" aria-label="Waterline">
+        <a href="/waterline/">Sign in</a>
+      </nav>
+    </div>
+
+    <div class="hero">
+      <p class="kicker">Developer API</p>
+      <h1>Waterline API</h1>
+      <p class="lede">
+        Read your books, accounts, transactions and Plan from your own code,
+        change the Plan, and send yourself notifications.
+      </p>
+
+      <ol class="steps">
+        <li>
+          <strong>Make a key</strong>
+          <span>In the Waterline app: Profile → Security → API keys. Keys come with Pro and Household.</span>
+        </li>
+        <li>
+          <strong>Authorize</strong>
+          <span>Press Authorize below and paste it. It stays in this tab.</span>
+        </li>
+        <li>
+          <strong>Try it</strong>
+          <span>Open any request, then Try it out and Execute.</span>
+        </li>
+      </ol>
+
+      <div class="base">
+        <span class="base-label">Base address</span>
+        <code id="base-url"></code>
+        <button type="button" class="copy" id="copy-base">Copy</button>
+        <a class="spec" id="spec-link" href="#">OpenAPI file</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="swagger-ui"><p class="loading">Loading the API…</p></div>
+  </main>
+
+  <footer class="site-footer">
+    <span>© DataProQ LLC</span>
+    <span class="spacer"></span>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="mailto:joe@dataproqllc.com">Contact</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/swagger-ui-bundle.js"
+          integrity="sha384-XFYN47VzPiDY6qPtxYKg0nqUeW/upo20xf1j2SUE7gT/i35FJB4cuS/71Iegzk8Z"
+          crossorigin="anonymous"></script>
+  <script src="/waterline/api/docs.js"></script>
+</body>
+</html>

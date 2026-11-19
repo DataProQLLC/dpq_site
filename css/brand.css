@@ -1,0 +1,137 @@
+/* DataProQ brand: colors, type, and the header and footer every page shares.
+   Navy and gold from the logo; off-white "paper" for pages. Products (like
+   Waterline) keep their own accent next to the DataProQ mark. */
+
+:root {
+  --navy: #1B2349;
+  --navy-raised: #262F5C;
+  --gold: #F6CE6E;
+  --gold-deep: #E9B949;
+  --paper: #F8F6F1;
+  --card: #FFFFFF;
+  --ink: #1F2437;
+  --slate: #4A5275;
+  --line: #E4E0D6;
+  --water: #7FB8F0;          /* Waterline's waves */
+  --ok: #1A6B4F;
+  --warn: #9A5B05;
+  --danger: #B42318;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --radius: 12px;
+  --gutter: 24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+h1, h2, h3 { color: var(--navy); line-height: 1.2; letter-spacing: -0.3px; }
+a { color: var(--navy); text-underline-offset: 2px; }
+a:hover { color: var(--navy-raised); }
+code, pre, kbd { font-family: var(--mono); font-size: 0.92em; }
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+
+.skip {
+  position: absolute; left: -9999px; top: 8px;
+  background: var(--gold); color: var(--navy); padding: 8px 12px; border-radius: 8px; z-index: 10;
+}
+.skip:focus { left: 8px; }
+
+/* ---- Header ------------------------------------------------------------ */
+
+.site-header { background: var(--navy); color: var(--paper); }
+.site-header .bar {
+  max-width: 1120px; margin: 0 auto; padding: 14px var(--gutter);
+  display: flex; align-items: center; gap: 16px; min-height: 64px;
+}
+.brand { display: flex; align-items: center; flex: none; }
+.brand img { display: block; height: 32px; width: auto; }
+.product {
+  display: flex; align-items: center; gap: 8px; min-width: 0;
+  padding-left: 16px; border-left: 1px solid rgba(248, 246, 241, 0.22);
+  color: var(--paper); text-decoration: none; font-weight: 600; font-size: 16px;
+  white-space: nowrap;
+}
+.product:hover { color: var(--paper); }
+.product img { height: 22px; width: 22px; flex: none; }
+.site-nav { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+.site-nav a {
+  color: rgba(248, 246, 241, 0.86); text-decoration: none; font-size: 15px; font-weight: 500;
+}
+.site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--gold); }
+
+@media (max-width: 560px) {
+  :root { --gutter: 16px; }
+  .brand img { height: 30px; }
+  .product { padding-left: 12px; font-size: 15px; }
+  .site-nav { gap: 14px; }
+}
+
+/* ---- Footer ------------------------------------------------------------ */
+
+.site-footer {
+  max-width: 1120px; margin: 0 auto; padding: 40px var(--gutter) 48px;
+  color: var(--slate); font-size: 14px;
+  display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center;
+}
+.site-footer a { color: var(--slate); }
+.site-footer .spacer { flex: 1; }
+
+/* ---- Pieces ------------------------------------------------------------ */
+
+.kicker {
+  color: var(--gold); font-size: 13px; font-weight: 700; letter-spacing: 1.6px;
+  text-transform: uppercase; margin: 0 0 10px;
+}
+.muted { color: var(--slate); font-size: 14px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px;
+}
+
+.button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font: inherit; font-size: 15px; font-weight: 600; line-height: 1.2; cursor: pointer;
+  padding: 12px 18px; min-height: 46px; border-radius: 10px; text-decoration: none;
+  border: 1px solid var(--navy); background: var(--navy); color: var(--paper);
+}
+.button:hover { background: var(--navy-raised); color: var(--paper); }
+.button.gold { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+.button.gold:hover { background: var(--gold-deep); border-color: var(--gold-deep); }
+.button.plain { background: var(--card); border-color: var(--line); color: var(--ink); }
+.button.plain:hover { border-color: var(--slate); }
+.button:disabled { opacity: 0.55; cursor: default; }
+.button.wide { width: 100%; }
+
+.linkish {
+  background: none; border: 0; padding: 0; font: inherit; font-size: 14px;
+  color: var(--navy); text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+}
+
+label { display: block; font-size: 14px; font-weight: 600; margin: 16px 0 6px; color: var(--ink); }
+input[type="email"], input[type="password"], input[type="text"], input[type="tel"] {
+  width: 100%; font: inherit; font-size: 16px; color: var(--ink);
+  padding: 11px 12px; border: 1px solid #CFCAC0; border-radius: 10px; background: var(--card);
+}
+input:focus { outline: 3px solid var(--gold); outline-offset: 0; border-color: var(--navy); }
+
+.note, .warn, .error {
+  border-left: 3px solid; border-radius: 4px; padding: 12px 14px; margin: 16px 0; font-size: 14px;
+}
+.note { border-color: var(--navy); background: #EEF0F7; color: var(--navy); }
+.warn { border-color: var(--warn); background: #FFF7E6; color: #5C3A06; }
+.error { border-color: var(--danger); background: #FEF3F2; color: #7A271A; }

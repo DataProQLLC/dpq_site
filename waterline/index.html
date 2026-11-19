@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <!-- GitHub Pages can't send headers, so the policy lives here. Only the
+       pinned supabase-js bundle and this site's own files run, and the page
+       talks only to the Supabase project. -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/;
+    style-src 'self';
+    img-src 'self' data:;
+    connect-src https://omxtckxgcybejfnyngxq.supabase.co;
+    form-action 'none';
+    base-uri 'none'">
+  <title>Sign in — Waterline</title>
+  <meta name="theme-color" content="#1B2349">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/img/brand/dataproq-icon-gold.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/css/brand.css">
+  <link rel="stylesheet" href="/waterline/waterline.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="/" aria-label="DataProQ LLC home">
+        <picture>
+          <source media="(max-width: 560px)" srcset="/img/brand/dataproq-icon-gold.svg">
+          <img src="/img/brand/dataproq-logo-for-dark-bg.svg" alt="DataProQ LLC" width="122" height="32">
+        </picture>
+      </a>
+      <a class="product" href="/waterline/">
+        <img src="/img/brand/waterline-mark.svg" alt="" width="22" height="22">
+        <span>Waterline</span>
+      </a>
+      <nav class="site-nav" aria-label="Waterline">
+        <a href="/waterline/api/">API docs</a>
+      </nav>
+    </div>
+    <div class="band">
+      <h1 id="title">Sign in to Waterline</h1>
+      <p id="subtitle">Use the account you made in the Waterline app.</p>
+    </div>
+  </header>
+
+  <main class="panel card">
+    <p id="status" class="muted">Loading…</p>
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <!-- Signing in -->
+    <section id="signin" hidden>
+      <button type="button" class="button plain wide" id="google-btn">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="or"><span>or</span></div>
+
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-code" aria-selected="true">Email me a code</button>
+        <button type="button" role="tab" id="tab-password" aria-selected="false">Password</button>
+      </div>
+
+      <form id="send-form" novalidate>
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+        <button type="submit" class="button wide" id="send-btn">Email me a code</button>
+      </form>
+
+      <form id="verify-form" novalidate hidden>
+        <label for="code">Enter the code we sent to <span id="sent-to"></span></label>
+        <input id="code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="10">
+        <button type="submit" class="button wide" id="verify-btn">Sign in</button>
+        <p class="small"><button type="button" class="linkish" id="restart-btn">Use a different email</button></p>
+      </form>
+
+      <form id="password-form" novalidate hidden>
+        <label for="pw-email">Email</label>
+        <input id="pw-email" type="email" autocomplete="username" placeholder="you@example.com">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password">
+        <button type="submit" class="button wide" id="password-btn">Sign in</button>
+        <p class="small muted">Forgot it? Reset it in the Waterline app, or use a code instead.</p>
+      </form>
+
+      <p class="small muted fine">
+        Signed up with Apple or your phone number? Those come to the web soon;
+        for now, use the app. By continuing you agree to the
+        <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.
+      </p>
+    </section>
+
+    <!-- Two-step verification -->
+    <section id="two-step" hidden>
+      <form id="mfa-form" novalidate>
+        <label for="mfa-code" id="mfa-label">Code from your authenticator app</label>
+        <input id="mfa-code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="6">
+        <button type="submit" class="button wide" id="mfa-btn">Verify</button>
+      </form>
+      <p class="small" id="text-me-row" hidden>
+        <button type="button" class="linkish" id="text-me-btn">Text me a code instead</button>
+      </p>
+      <p class="small muted">Lost your authenticator? Use a recovery code in the Waterline app.</p>
+      <p class="small"><button type="button" class="linkish" id="mfa-signout-btn">Sign out</button></p>
+    </section>
+
+    <!-- Signed in -->
+    <section id="home" hidden>
+      <dl class="facts">
+        <div><dt>Signed in as</dt><dd id="who"></dd></div>
+        <div><dt>Plan</dt><dd id="plan">…</dd></div>
+        <div><dt>Two-step</dt><dd id="two-step-state">…</dd></div>
+        <div><dt>API</dt><dd id="api-state">…</dd></div>
+      </dl>
+
+      <div id="free-note" class="note" hidden>
+        On Free, your money data stays on your phone. Pro and Household keep it
+        in your account, so it can show here too.
+      </div>
+
+      <div class="tiles">
+        <a class="tile" href="/waterline/api/">
+          <strong>API docs</strong>
+          <span>Every endpoint, and try them with your key.</span>
+        </a>
+        <div class="tile soon" aria-disabled="true">
+          <strong>Reports <em>Soon</em></strong>
+          <span>Your Plan, forecast and spending, on a big screen.</span>
+        </div>
+      </div>
+
+      <button type="button" class="button plain wide" id="signout-btn">Sign out of this browser</button>
+      <p class="small muted">
+        This browser is listed in the app under Profile → Security, Where
+        you’re signed in, and can be signed out from there too.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>© DataProQ LLC</span>
+    <span class="spacer"></span>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="mailto:joe@dataproqllc.com">Contact</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"
+          integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK"
+          crossorigin="anonymous"></script>
+  <script src="/waterline/waterline.js"></script>
+</body>
+</html>
