@@ -81,6 +81,13 @@
     clearError();
     const { data } = await sb.auth.getSession();
     if (!data || !data.session) return showSignIn();
+    // Kept from before in this tab, but ended since (signed out elsewhere,
+    // timed out): sign in again rather than fail on the next step.
+    const { error } = await sb.auth.getUser();
+    if (error) {
+      await sb.auth.signOut({ scope: 'local' }).catch(() => {});
+      return showSignIn();
+    }
     // Every page load asks the server: the steps it's done, or what's left.
     return showSteps();
   }

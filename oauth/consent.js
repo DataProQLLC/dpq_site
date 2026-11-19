@@ -199,10 +199,26 @@
     }
   }
 
+  /// A sign-in this tab kept that Supabase has since ended (signed out
+  /// elsewhere, timed out): not an error to show, just sign in again.
+  function sessionGone(error) {
+    return !!error && (error.name === 'AuthSessionMissingError'
+      || ['session_not_found', 'refresh_token_not_found', 'refresh_token_already_used'].includes(error.code)
+      || /session (missing|not found)|session_id claim|refresh token/i.test(error.message || ''));
+  }
+
+  async function signInAgain() {
+    window.WaterlineSteps.stop();
+    await sb.auth.signOut({ scope: 'local' }).catch(() => {});
+    resetToSignIn(false);
+    setStatus('Sign in to continue.');
+  }
+
   async function loadConsent() {
     setStatus('Checking the request…');
     const { data, error } = await sb.auth.oauth.getAuthorizationDetails(authorizationId);
 
+    if (sessionGone(error)) return signInAgain();
     if (error) {
       setStatus('');
       return showError(
@@ -321,6 +337,9 @@
   (async () => {
     const { data } = await sb.auth.getSession();
     if (data && data.session) {
+      // Kept from before in this tab: still good with Supabase?
+      const { error } = await sb.auth.getUser();
+      if (error) return signInAgain();
       await afterSignIn();
     } else {
       setStatus('');
