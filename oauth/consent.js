@@ -151,7 +151,7 @@
       sb,
       kind: 'connect',
       client: {
-        id: c.id || c.client_id || `redirect:${request.redirect_uri}`,
+        id: c.id || c.client_id || '*',
         name: c.name || 'An app',
         returnTo: describeRedirect(request.redirect_uri).label,
       },
@@ -212,10 +212,26 @@
       );
     }
 
-    // Already approved earlier: Supabase gives us the finished redirect.
+    // Approved before: Supabase hands back the finished redirect without
+    // asking (or saying which app). It's still checked on their phone first:
+    // Waterline lets a connection in only with a check made just before it.
     if (data && !('authorization_id' in data) && data.redirect_url) {
-      setStatus('Already approved. Returning you to the app…');
-      window.location.replace(data.redirect_url);
+      const back = describeRedirect(data.redirect_url);
+      let host = '';
+      try { host = new URL(data.redirect_url).hostname; } catch { /* not a URL */ }
+      request = {
+        redirect_uri: data.redirect_url,
+        client: { id: '*', name: KNOWN_REDIRECT_HOSTS[host] || host || 'an app' },
+      };
+      show($('signin'), false);
+      await window.WaterlineSteps.start({
+        ...stepsFor(),
+        onDone: () => {
+          setStatus('Confirmed. Returning you to the app…');
+          window.location.replace(data.redirect_url);
+        },
+      });
+      $('redirect-host').textContent = back.label;
       return;
     }
 
