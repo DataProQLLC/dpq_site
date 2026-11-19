@@ -20,6 +20,19 @@
     return;
   }
 
+  // Signed in to Waterline in this tab (the sign-in page keeps its session
+  // per tab, where supabase-js names it sb-<project>-auth-token): the header
+  // goes to their account rather than asking them to sign in.
+  try {
+    const project = new URL(API).hostname.split('.')[0];
+    if (sessionStorage.getItem(`sb-${project}-auth-token`)) {
+      const link = document.querySelector('.site-nav a[href="/waterline/"]');
+      if (link) link.textContent = 'Your account';
+    }
+  } catch {
+    // Storage blocked: Sign in it stays.
+  }
+
   $('base-url').textContent = API;
   $('spec-link').href = `${API}/v1/openapi.json`;
 
