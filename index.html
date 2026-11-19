@@ -3,73 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
   <title>DataProQ LLC</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      max-width: 620px; margin: 0 auto; padding: 80px 24px;
-      line-height: 1.65; color: #1a1a1a; background: #fff;
-    }
-    h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.5px; }
-    h2 { font-size: 17px; margin: 40px 0 8px; }
-    .lede { font-size: 18px; color: #444; }
-    .muted { color: #666; font-size: 14px; }
-    hr { border: 0; border-top: 1px solid #e5e5e5; margin: 48px 0 24px; }
-    a { color: #1a6b4f; }
-    ul { padding-left: 20px; }
-    li { margin: 4px 0; }
-    .sms {
-      border-left: 3px solid #1a6b4f; background: #f6faf8;
-      padding: 14px 18px; margin: 20px 0;
-    }
-    .sms p:first-child { margin-top: 0; }
-    .sms p:last-child { margin-bottom: 0; }
-    address { font-style: normal; }
-  </style>
+  <meta name="description" content="DataProQ LLC: software for making sense of your endless data. Makers of Waterline.">
+  <meta name="theme-color" content="#1B2349">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/img/brand/dataproq-icon-gold.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/css/brand.css">
+  <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
+  <a class="skip" href="#main">Skip to the text</a>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="/" aria-label="DataProQ LLC home" aria-current="page">
+        <picture>
+          <source media="(max-width: 560px)" srcset="/img/brand/dataproq-icon-gold.svg">
+          <img src="/img/brand/dataproq-logo-for-dark-bg.svg" alt="DataProQ LLC" width="122" height="32">
+        </picture>
+      </a>
+      <nav class="site-nav" aria-label="DataProQ">
+        <a href="/waterline/">Waterline</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+      </nav>
+    </div>
+    <div class="page-head home-head">
+      <p class="kicker">DataProQ LLC</p>
+      <h1>Software for making sense of your endless data.</h1>
+    </div>
+  </header>
 
-  <h1>DataProQ LLC</h1>
-  <p class="lede">Software for making sense of your endless data.</p>
+  <main id="main" class="sheet home">
+    <section class="card product-card" aria-labelledby="waterline-title">
+      <img class="icon" src="/img/brand/waterline-icon.svg" alt="" width="56" height="56">
+      <h2 id="waterline-title">Waterline</h2>
+      <p>
+        A personal finance and cash flow projection application from DataProQ LLC. Users sign in with a
+        one-time passcode sent by email, or with Apple or Google authentication.
+      </p>
+      <p class="links">
+        <a href="/waterline/">Sign in on the web</a>
+        <a href="/waterline/api/">API docs</a>
+      </p>
+    </section>
 
-  <h2>Waterline</h2>
-  <p>
-    A personal finance application cash flow projection application from DataProQ LLC. Users sign in with a
-    one-time passcode sent by email, or with Apple or Google authentication.
-  </p>
+    <div class="pair">
+      <section class="card" aria-labelledby="sms-title">
+        <h2 id="sms-title">Text messages</h2>
+        <div class="sms">
+          <p>
+            DataProQ LLC sends one-time passcodes and account security alerts by SMS
+            to users who choose to sign in with a phone number. All messages are
+            transactional; we send no marketing or promotional texts.
+          </p>
+          <p>
+            Message frequency varies. Message and data rates may apply. Reply STOP to
+            opt out, HELP for help. <strong>No mobile information will be shared with
+            third parties or affiliates for marketing or promotional purposes.</strong>
+          </p>
+          <p>
+            See <a href="/sms-opt-in.html">how the SMS opt-in works</a>.
+          </p>
+        </div>
+      </section>
 
-  <h2>Text messages</h2>
+      <section class="card" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact</h2>
+        <address>
+          DataProQ LLC<br>
+          <!-- Replace with your registered business address -->
+          3471 Indian Queen Ln<br>
+          Philadelphia, PA 19129<br>
+          <a href="mailto:joe@dataproqllc.com">joe@dataproqllc.com</a>
+        </address>
+      </section>
+    </div>
+  </main>
 
-  <div class="sms">
-    <p>
-      DataProQ LLC sends one-time passcodes and account security alerts by SMS
-      to users who choose to sign in with a phone number. All messages are
-      transactional; we send no marketing or promotional texts.
-    </p>
-    <p>
-      Message frequency varies. Message and data rates may apply. Reply STOP to
-      opt out, HELP for help. <strong>No mobile information will be shared with
-      third parties or affiliates for marketing or promotional purposes.</strong>
-    </p>
-    <p>
-      See <a href="/sms-opt-in.html">how the SMS opt-in works</a>.
-    </p>
-  </div>
-
-  <h2>Contact</h2>
-  <address>
-    DataProQ LLC<br>
-    <!-- Replace with your registered business address -->
-    3471 Indian Queen Ln<br>
-    Philadelphia, PA 19129<br>
-    <a href="mailto:joe@dataproqllc.com">joe@dataproqllc.com</a>
-  </address>
-
-  <hr>
-  <p class="muted">
-    <a href="/privacy.html">Privacy Policy</a> &middot;
-    <a href="/terms.html">Terms of Service</a> &middot;
+  <footer class="site-footer">
+    <span>&copy; DataProQ LLC</span>
+    <span class="spacer"></span>
+    <a href="/privacy.html">Privacy Policy</a>
+    <a href="/terms.html">Terms of Service</a>
     <a href="/sms-opt-in.html">SMS Opt-In</a>
-  </p>
+  </footer>
 </body>
 </html>

@@ -1,0 +1,21 @@
+/* Connecting an app: the Waterline sign-in card (waterline.css) with the
+   app that's asking, what it wants, and Approve / Deny. */
+
+.panel p { margin: 8px 0; }
+.row { display: flex; gap: 10px; margin-top: 18px; }
+.panel .row .button { flex: 1; margin-top: 0; }
+
+.client {
+  border: 1px solid var(--line); border-radius: 10px; background: var(--paper);
+  padding: 14px 16px; margin: 4px 0 18px;
+}
+.client-name { font-size: 18px; font-weight: 700; margin: 0; color: var(--navy); overflow-wrap: anywhere; }
+.kv { font-size: 14px; color: var(--slate); margin: 4px 0 0; overflow-wrap: anywhere; }
+.kv strong { color: var(--ink); font-weight: 600; }
+
+.scopes-title { margin-bottom: 4px; }
+ul.scopes { padding-left: 20px; margin: 4px 0 0; }
+ul.scopes li { margin: 4px 0; font-size: 15px; }
+
+.signed-as { margin-top: 18px; }
+.fine-links { text-align: center; margin: 20px 0 0; }

@@ -1,0 +1,91 @@
+/* The DataProQ pages that are mostly words (home, privacy, terms, SMS
+   opt-in): brand.css's navy header with a title band, then the text on a
+   white sheet over the paper page. */
+
+.page-head { max-width: 800px; margin: 0 auto; padding: 26px var(--gutter) 76px; }
+.page-head h1 { color: var(--paper); font-size: 34px; margin: 0; letter-spacing: -0.6px; }
+.page-head .updated { margin: 6px 0 0; color: rgba(248, 246, 241, 0.78); font-size: 14px; }
+.page-head .lede { margin: 8px 0 0; color: rgba(248, 246, 241, 0.86); font-size: 18px; max-width: 34em; }
+
+.sheet {
+  position: relative; max-width: 800px; margin: -52px auto 0; padding: 0 var(--gutter);
+}
+.sheet > .card { padding: 36px 40px 40px; box-shadow: 0 10px 30px rgba(27, 35, 73, 0.08); }
+
+.doc { line-height: 1.65; }
+.doc > :first-child { margin-top: 0; }
+.doc > :last-child { margin-bottom: 0; }
+.doc h2 { font-size: 19px; margin: 36px 0 8px; }
+.doc .lede { font-size: 18px; color: var(--slate); }
+.doc ul, .doc ol { padding-left: 22px; }
+.doc li { margin: 6px 0; }
+.doc ol li { margin: 10px 0; }
+address { font-style: normal; }
+
+/* The text-message promises: set apart so they can't be missed. */
+.sms {
+  border-left: 3px solid var(--gold-deep); border-radius: 4px; background: #FFF9EA;
+  padding: 14px 18px; margin: 20px 0;
+}
+.sms p:first-child { margin-top: 0; }
+.sms p:last-child, .sms ul:last-child { margin-bottom: 0; }
+
+/* The disclosure exactly as the app shows it. */
+.consent {
+  border: 1px solid var(--line); border-radius: 10px; background: var(--paper);
+  padding: 14px 18px; margin: 20px 0; font-size: 15px;
+}
+
+/* The opt-in screenshots, side by side where there's room. */
+.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin: 20px 0 8px; }
+.shots figure { margin: 0; }
+.shots img {
+  display: block; width: 100%; max-width: 280px; height: auto;
+  border: 1px solid var(--line); border-radius: 12px;
+}
+.shots figcaption { font-size: 14px; color: var(--slate); margin-top: 8px; }
+
+/* Home */
+.home-head { padding-bottom: 84px; }
+.home-head .kicker { margin-bottom: 8px; }
+.home-head h1 { font-size: 40px; max-width: 16em; }
+.home { display: grid; gap: 18px; }
+.home .card { padding: 28px 32px; }
+.home h2 { font-size: 20px; margin: 0 0 8px; }
+.home p { margin: 8px 0; }
+.home .sms { margin-bottom: 0; }
+.product-card { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 4px 20px; align-items: start; }
+.product-card .icon { width: 56px; height: 56px; border-radius: 13px; grid-row: span 3; }
+.product-card .links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 8px; font-weight: 600; }
+.pair { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+
+/* A short page with one message (the Plaid return). */
+.notice { max-width: 520px; text-align: center; }
+.notice .card { padding: 32px 28px; }
+.notice h1 { font-size: 24px; margin: 0 0 10px; }
+.notice p { color: var(--slate); }
+
+@media (max-width: 760px) {
+  .pair { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .page-head { padding-bottom: 68px; }
+  .page-head h1 { font-size: 28px; }
+  .home-head h1 { font-size: 30px; }
+  .sheet { padding: 0 var(--gutter); }
+  .sheet > .card, .home .card { padding: 22px 20px 24px; }
+  .product-card { grid-template-columns: minmax(0, 1fr); }
+  .product-card .icon { grid-row: auto; width: 48px; height: 48px; border-radius: 11px; }
+  .shots { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .shots figure { max-width: 280px; }
+}
+
+@media print {
+  .site-header .bar, .site-footer { display: none; }
+  .site-header { background: #fff; }
+  .page-head h1 { color: var(--navy); }
+  .page-head .updated, .page-head .lede { color: var(--slate); }
+  .page-head { padding-bottom: 12px; }
+  .sheet { margin-top: 0; }
+  .sheet > .card, .home .card { border: 0; box-shadow: none; padding: 0; }
+}
