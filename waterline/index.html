@@ -99,18 +99,29 @@
       </p>
     </section>
 
-    <!-- Two-step verification -->
-    <section id="two-step" hidden>
-      <form id="mfa-form" novalidate>
-        <label for="mfa-code" id="mfa-label">Code from your authenticator app</label>
-        <input id="mfa-code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="6">
-        <button type="submit" class="button wide" id="mfa-btn">Verify</button>
-      </form>
-      <p class="small" id="text-me-row" hidden>
-        <button type="button" class="linkish" id="text-me-btn">Text me a code instead</button>
-      </p>
-      <p class="small muted">Lost your authenticator? Use a recovery code in the Waterline app.</p>
-      <p class="small"><button type="button" class="linkish" id="mfa-signout-btn">Sign out</button></p>
+    <!-- After signing in: your phone, then two-step (waterline/steps.js) -->
+    <section id="steps" hidden>
+      <div id="phone-step" class="step">
+        <div class="step-head"><span class="step-num">1</span><strong>Approve on your phone</strong></div>
+        <p id="phone-text" class="small"></p>
+        <div id="phone-number" class="big-number" aria-live="polite"></div>
+        <p id="phone-status" class="small muted" role="status"></p>
+        <button type="button" class="button plain wide" id="phone-again-btn" hidden>Send it again</button>
+      </div>
+      <div id="code-step" class="step">
+        <div class="step-head"><span class="step-num">2</span><strong>Two-step verification</strong></div>
+        <form id="mfa-form" novalidate>
+          <label for="mfa-code" id="mfa-label">Code from your authenticator app</label>
+          <input id="mfa-code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="6">
+          <p id="code-wait" class="small muted">This opens once you approve on your phone.</p>
+          <button type="submit" class="button wide" id="mfa-btn">Verify</button>
+        </form>
+        <p class="small" id="text-me-row" hidden>
+          <button type="button" class="linkish" id="text-me-btn">Text me a code instead</button>
+        </p>
+        <p class="small muted">Lost your authenticator? Use a recovery code in the Waterline app.</p>
+      </div>
+      <p class="small"><button type="button" class="linkish" id="steps-signout-btn">Use a different account</button></p>
     </section>
 
     <!-- Signed in -->
@@ -157,6 +168,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"
           integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK"
           crossorigin="anonymous"></script>
+  <script src="/waterline/steps.js"></script>
   <script src="/waterline/waterline.js"></script>
 </body>
 </html>

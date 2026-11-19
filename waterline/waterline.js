@@ -1,6 +1,7 @@
 // Waterline on the web: sign in with the account made in the app (Google,
-// an emailed code, or a password), then the two-step code if it's on, then
-// a page about the account. More (reports) comes later.
+// an emailed code, or a password), then approve it on your phone and enter
+// the two-step code if it's on (steps.js), then a page about the account.
+// More (reports) comes later.
 //
 // Everything here is public: the publishable key is made to ship in browser
 // code, and the database decides what each person can see. The session is
@@ -36,7 +37,7 @@
     $('subtitle').textContent = subtitle;
   }
   function only(section) {
-    for (const id of ['signin', 'two-step', 'home']) show($(id), id === section);
+    for (const id of ['signin', 'steps', 'home']) show($(id), id === section);
   }
 
   /// What went wrong, in words to act on.
@@ -80,9 +81,8 @@
     clearError();
     const { data } = await sb.auth.getSession();
     if (!data || !data.session) return showSignIn();
-    const { data: aal, error } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-    if (!error && aal && aal.nextLevel === 'aal2' && aal.currentLevel !== 'aal2') return showTwoStep();
-    return showHome(data.session, aal);
+    // Every page load asks the server: the steps it's done, or what's left.
+    return showSteps();
   }
 
   // ---- Signing in ---------------------------------------------------------
@@ -173,76 +173,32 @@
     await route();
   });
 
-  // ---- Two-step verification ----------------------------------------------
+  // ---- Your phone, then two-step (steps.js) --------------------------------
 
-  let authenticators = [];   // their authenticator apps (TOTP), oldest first
-  let phones = [];           // phone numbers set up for two-step
-  let texted = null;         // {factorId, challengeId} once a code's been texted
-
-  async function showTwoStep() {
-    heading('Two-step verification', 'One more step: the code that proves it’s you.');
+  async function showSteps() {
     setStatus('');
-    texted = null;
-    const { data, error } = await sb.auth.mfa.listFactors();
-    if (error) return showError(explain(error));
-    authenticators = data.totp || [];
-    phones = data.phone || [];
-    $('mfa-label').textContent = authenticators.length
-      ? 'Code from your authenticator app'
-      : 'We’ll text a code to your phone';
-    $('mfa-btn').textContent = authenticators.length ? 'Verify' : 'Text me a code';
-    show($('mfa-code'), authenticators.length > 0);
-    show($('text-me-row'), authenticators.length > 0 && phones.length > 0);
-    $('mfa-code').value = '';
-    only('two-step');
-    if (authenticators.length) $('mfa-code').focus();
+    only('');
+    await window.WaterlineSteps.start({
+      sb,
+      kind: 'web',
+      showError: (text) => showError(text),
+      clearError,
+      onShow: () => heading('Confirm it’s you', 'One more step before Waterline opens.'),
+      onDone: showHome,
+      onSignedOut: (turnedDown) => {
+        useTab('code');
+        showSignIn();
+        if (turnedDown) show($('error'), true);
+      },
+    });
   }
-
-  async function textCode() {
-    clearError();
-    const factor = phones[0];
-    const { data, error } = await sb.auth.mfa.challenge({ factorId: factor.id });
-    if (error) return showError(explain(error));
-    texted = { factorId: factor.id, challengeId: data.id };
-    const last4 = (factor.phone || '').slice(-4);
-    $('mfa-label').textContent = last4 ? `Code we texted to the number ending ${last4}` : 'Code we texted you';
-    $('mfa-btn').textContent = 'Verify';
-    show($('mfa-code'), true);
-    show($('text-me-row'), false);
-    $('mfa-code').value = '';
-    $('mfa-code').focus();
-  }
-  $('text-me-btn').addEventListener('click', textCode);
-
-  $('mfa-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-    if (!authenticators.length && !texted) return textCode();
-    const code = $('mfa-code').value.replace(/\s/g, '');
-    if (!/^\d{6}$/.test(code)) return showError('Enter the 6-digit code.');
-    $('mfa-btn').disabled = true;
-    let error = null;
-    if (texted) {
-      ({ error } = await sb.auth.mfa.verify({ ...texted, code }));
-    } else {
-      // A code from any of their authenticator apps: each is tried until one
-      // takes it (as the app does).
-      for (const [i, factor] of authenticators.entries()) {
-        ({ error } = await sb.auth.mfa.challengeAndVerify({ factorId: factor.id, code }));
-        if (!error || error.code !== 'mfa_verification_failed' || i === authenticators.length - 1) break;
-      }
-    }
-    $('mfa-btn').disabled = false;
-    if (error) {
-      $('mfa-code').value = '';
-      return showError(explain(error));
-    }
-    await route();
-  });
 
   // ---- Signed in ----------------------------------------------------------
 
-  async function showHome(session, aal) {
+  async function showHome() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return showSignIn();
+    const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
     const user = session.user;
     heading('Waterline', 'You’re signed in.');
     $('who').textContent = user.email || user.phone || 'You';
@@ -308,12 +264,12 @@
 
   // Ends this browser's session (on the server too), nothing else.
   async function signOut() {
+    window.WaterlineSteps.stop();
     await sb.auth.signOut({ scope: 'local' });
     useTab('code');
     await route();
   }
   $('signout-btn').addEventListener('click', signOut);
-  $('mfa-signout-btn').addEventListener('click', signOut);
 
   // ---- Start --------------------------------------------------------------
 

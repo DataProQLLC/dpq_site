@@ -78,6 +78,27 @@
       border-left: 3px solid #b42318; background: #fef3f2;
       padding: 12px 16px; margin: 16px 0; font-size: 14px; color: #7a271a;
     }
+
+    /* Their phone, then two-step */
+    .step { padding: 4px 0 16px; }
+    .step + .step { border-top: 1px solid #e5e5e5; padding-top: 16px; }
+    .step-head { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 50%; flex: none; display: grid; place-items: center;
+      font-size: 13px; font-weight: 700; background: #1a6b4f; color: #fff;
+    }
+    .big-number {
+      margin: 10px 0 2px; text-align: center; font-size: 52px; font-weight: 800;
+      letter-spacing: 2px; color: #1a1a1a; font-variant-numeric: tabular-nums;
+    }
+    .big-number:empty { display: none; }
+    #phone-step[data-state="approved"] .big-number,
+    #phone-step[data-state="done"] .big-number,
+    #phone-step[data-state="expired"] .big-number { opacity: 0.35; }
+    #phone-step[data-state="approved"] #phone-status,
+    #phone-step[data-state="done"] #phone-status { color: #1a6b4f; font-weight: 600; }
+    #phone-status { text-align: center; margin-top: 0; }
+    #mfa-code:disabled { background: #f3f3f3; color: #888; }
   </style>
 </head>
 <body>
@@ -105,17 +126,27 @@
       </form>
     </section>
 
-    <!-- Step 1b: two-step verification, when it's on for their account -->
-    <section id="two-step" hidden>
-      <p>Two-step verification is on for this account. Enter the code to continue.</p>
-      <form id="mfa-form" novalidate>
-        <label for="mfa-code" id="mfa-label">Code from your authenticator app</label>
-        <input id="mfa-code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="6">
-        <div class="row"><button type="submit" id="mfa-btn">Verify</button></div>
-      </form>
-      <p id="text-me-row" hidden><button type="button" class="linkish" id="text-me-btn">Text me a code instead</button></p>
-      <p class="muted">Lost your authenticator? Use a recovery code in the <span class="app-name"></span> app.</p>
-      <p><button type="button" class="linkish" id="mfa-signout-btn">Use a different account</button></p>
+    <!-- Step 1b: their phone, then two-step (/waterline/steps.js) -->
+    <section id="steps" hidden>
+      <div id="phone-step" class="step">
+        <div class="step-head"><span class="step-num">1</span><strong>Approve on your phone</strong></div>
+        <p id="phone-text"></p>
+        <div id="phone-number" class="big-number" aria-live="polite"></div>
+        <p id="phone-status" class="muted" role="status"></p>
+        <div class="row"><button type="button" class="secondary" id="phone-again-btn" hidden>Send it again</button></div>
+      </div>
+      <div id="code-step" class="step">
+        <div class="step-head"><span class="step-num">2</span><strong>Two-step verification</strong></div>
+        <form id="mfa-form" novalidate>
+          <label for="mfa-code" id="mfa-label">Code from your authenticator app</label>
+          <input id="mfa-code" type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="6">
+          <p id="code-wait" class="muted">This opens once you approve on your phone.</p>
+          <div class="row"><button type="submit" id="mfa-btn">Verify</button></div>
+        </form>
+        <p id="text-me-row" hidden><button type="button" class="linkish" id="text-me-btn">Text me a code instead</button></p>
+        <p class="muted">Lost your authenticator? Use a recovery code in the <span class="app-name"></span> app.</p>
+      </div>
+      <p><button type="button" class="linkish" id="steps-signout-btn">Use a different account</button></p>
     </section>
 
     <!-- Step 2: consent -->
@@ -156,6 +187,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"
           integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK"
           crossorigin="anonymous"></script>
+  <script src="/waterline/steps.js"></script>
   <script src="/oauth/consent.js"></script>
 </body>
 </html>
