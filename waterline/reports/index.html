@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <!-- GitHub Pages can't send headers, so the policy lives here. Only the
+       pinned supabase-js bundle and this site's own files run, and the page
+       talks only to the Supabase project. -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/;
+    style-src 'self';
+    img-src 'self' data:;
+    connect-src https://omxtckxgcybejfnyngxq.supabase.co;
+    form-action 'none';
+    base-uri 'none'">
+  <title>Reports — Waterline</title>
+  <meta name="theme-color" content="#1B2349">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/img/brand/dataproq-icon-gold.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/css/brand.css">
+  <link rel="stylesheet" href="/waterline/reports/reports.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="/" aria-label="DataProQ LLC home">
+        <picture>
+          <source media="(max-width: 560px)" srcset="/img/brand/dataproq-icon-gold.svg">
+          <img src="/img/brand/dataproq-logo-for-dark-bg.svg" alt="DataProQ LLC" width="122" height="32">
+        </picture>
+      </a>
+      <a class="product" href="/waterline/">
+        <img src="/img/brand/waterline-mark.svg" alt="" width="22" height="22">
+        <span>Waterline</span>
+      </a>
+      <nav class="site-nav" aria-label="Waterline">
+        <a href="/waterline/">Your account</a>
+        <a href="/waterline/api/">API docs</a>
+      </nav>
+    </div>
+    <div class="report-head">
+      <p class="kicker">Month report</p>
+      <h1 id="title">Your month</h1>
+      <p id="subtitle" class="lede"></p>
+    </div>
+  </header>
+
+  <main class="report">
+    <p id="status" class="muted">Loading…</p>
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <section id="signin-needed" class="card narrow" hidden>
+      <h2>Sign in to see your reports</h2>
+      <p>Reports use the same sign-in as the Waterline app, checked on your phone.</p>
+      <a class="button" id="signin-link" href="/waterline/?next=/waterline/reports/">Sign in</a>
+    </section>
+
+    <section id="locked" class="card narrow" hidden>
+      <h2>Reports come with Pro</h2>
+      <p>Reports on the web read your Plan, forecast and accounts from your account. On
+        Free, your money data stays on your phone. Upgrade in the app (Profile, Plan &amp;
+        billing) to see it here.</p>
+    </section>
+
+    <div id="report" hidden>
+      <div class="controls" role="group" aria-label="Which book and month">
+        <label class="field">
+          <span>Book</span>
+          <select id="book"></select>
+        </label>
+        <div class="months">
+          <button type="button" class="button plain" id="prev" aria-label="Month before">‹</button>
+          <span id="month-name" aria-live="polite"></span>
+          <button type="button" class="button plain" id="next" aria-label="Month after">›</button>
+        </div>
+        <button type="button" class="button plain" id="print">Print</button>
+      </div>
+
+      <section class="tiles" aria-label="The month added up">
+        <div class="tile"><span class="label">Coming in</span><strong id="in"></strong><span class="sub" id="in-sub"></span></div>
+        <div class="tile"><span class="label">Going out</span><strong id="out"></strong><span class="sub" id="out-sub"></span></div>
+        <div class="tile"><span class="label">Comes to</span><strong id="net"></strong><span class="sub">In less out, as planned</span></div>
+        <div class="tile"><span class="label">Against plan</span><strong id="off"></strong><span class="sub" id="off-sub"></span></div>
+      </section>
+
+      <section class="card" aria-labelledby="forecast-title">
+        <div class="card-head">
+          <h2 id="forecast-title">Where it's headed</h2>
+          <p class="muted" id="forecast-sub"></p>
+        </div>
+        <div class="chart" id="chart"></div>
+        <details class="table-view">
+          <summary>Show as a table</summary>
+          <div class="scroll"><table id="forecast-table"><thead><tr><th>Day</th><th class="num">Balance</th></tr></thead><tbody></tbody></table></div>
+        </details>
+      </section>
+
+      <div class="two">
+        <section class="card" aria-labelledby="items-title">
+          <h2 id="items-title">This month's Plan</h2>
+          <div class="scroll"><table id="items"><thead><tr><th>Date</th><th>Item</th><th class="col-acct">Account</th><th class="num">Amount</th><th>State</th></tr></thead><tbody></tbody></table></div>
+          <p class="muted empty" id="items-empty" hidden>Nothing due this month.</p>
+        </section>
+
+        <div class="stack">
+          <section class="card" aria-labelledby="accounts-title">
+            <h2 id="accounts-title">Accounts</h2>
+            <div class="scroll"><table id="accounts"><thead><tr><th>Account</th><th class="num">Balance</th></tr></thead><tbody></tbody></table></div>
+          </section>
+          <section class="card" aria-labelledby="groups-title" id="groups-card">
+            <h2 id="groups-title">Spending groups</h2>
+            <div id="groups"></div>
+          </section>
+        </div>
+      </div>
+
+      <p class="muted printed" id="printed"></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>© DataProQ LLC</span>
+    <span class="spacer"></span>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"
+          integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK"
+          crossorigin="anonymous"></script>
+  <script src="/waterline/reports/chart.js"></script>
+  <script src="/waterline/reports/reports.js"></script>
+</body>
+</html>

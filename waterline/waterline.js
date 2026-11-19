@@ -205,6 +205,12 @@
   async function showHome() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return showSignIn();
+    // Sent here to sign in from another page of ours (a report): back to it.
+    const next = new URLSearchParams(window.location.search).get('next');
+    if (next && /^\/waterline\/[a-z0-9/_-]*$/.test(next) && !next.includes('//')) {
+      window.location.replace(next);
+      return;
+    }
     const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
     const user = session.user;
     heading('Waterline', 'You’re signed in.');

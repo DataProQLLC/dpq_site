@@ -1,0 +1,118 @@
+/* The month report: brand.css's navy header and paper page, cards of
+   tables and one chart, and a clean printout. */
+
+.report-head { max-width: 1120px; margin: 0 auto; padding: 22px var(--gutter) 30px; color: var(--paper); }
+.report-head h1 { color: var(--paper); font-size: 34px; margin: 0; letter-spacing: -0.6px; }
+.report-head .lede { margin: 4px 0 0; color: rgba(248, 246, 241, 0.82); font-size: 17px; }
+
+.report { max-width: 1120px; margin: 0 auto; padding: 24px var(--gutter) 8px; }
+.report h2 { font-size: 18px; margin: 0 0 12px; }
+.narrow { max-width: 520px; margin: 24px auto; }
+.narrow p { color: var(--slate); }
+#report.loading { opacity: 0.55; transition: opacity 0.15s; }
+
+/* Which book and month: one row above everything it scopes. */
+.controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px 16px; margin-bottom: 18px; }
+.field { display: grid; gap: 4px; margin: 0; font-size: 13px; color: var(--slate); font-weight: 600; }
+.field select {
+  font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); background: var(--card);
+  border: 1px solid #CFCAC0; border-radius: 10px; padding: 9px 12px; min-width: 200px; max-width: 100%;
+}
+.months { display: flex; align-items: center; gap: 8px; }
+.months .button { min-height: 40px; padding: 8px 14px; font-size: 18px; }
+#month-name { font-weight: 700; color: var(--navy); min-width: 9.5em; text-align: center; }
+#print { margin-left: auto; min-height: 40px; }
+
+/* The month added up. */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+.tiles .tile {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px;
+  display: grid; gap: 2px; min-width: 0;
+}
+.tiles .label { font-size: 13px; color: var(--slate); font-weight: 600; }
+.tiles strong { font-size: 24px; color: var(--navy); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.tiles .sub { font-size: 13px; color: var(--slate); }
+
+.card { margin-bottom: 18px; }
+.card-head p { margin: -6px 0 10px; }
+
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart svg:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; border-radius: 6px; }
+.chart text { font-family: var(--font); font-variant-numeric: tabular-nums; }
+.chart-tip {
+  position: absolute; pointer-events: none; background: var(--card); border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 10px; box-shadow: 0 4px 14px rgba(27, 35, 73, 0.12);
+  display: grid; font-size: 13px; white-space: nowrap;
+}
+.chart-tip strong { color: var(--ink); font-size: 15px; font-variant-numeric: tabular-nums; }
+.chart-tip span { color: var(--slate); }
+.table-view { margin-top: 10px; font-size: 14px; }
+.table-view summary { cursor: pointer; color: var(--navy); font-weight: 600; }
+.table-view .scroll { max-height: 320px; margin-top: 8px; }
+
+.two { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.two .card, .stack .card { margin-bottom: 18px; }
+
+/* Tables */
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; color: var(--slate); font-weight: 600; font-size: 13px; padding: 0 10px 8px 0; border-bottom: 1px solid var(--line); }
+td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td .sub { display: block; font-size: 12px; color: var(--slate); }
+.empty { margin: 4px 0 0; }
+
+.chip {
+  display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+  background: #EEF0F7; color: var(--navy); white-space: nowrap;
+}
+.chip.paid { background: #E7F3EC; color: var(--ok); }
+.chip.missed, .chip.late { background: #FEF3F2; color: var(--danger); }
+.chip.skipped { background: #F1EEE6; color: var(--slate); }
+
+/* Spending groups: what's gone against the plan. */
+.group { padding: 8px 0 10px; border-bottom: 1px solid var(--line); }
+.group:last-child { border-bottom: 0; }
+.group-head { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 600; }
+.group-head span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.group-bar { height: 8px; border-radius: 4px; background: #F1EEE6; margin: 6px 0 4px; overflow: hidden; }
+.group-bar span { display: block; height: 100%; border-radius: 4px; background: var(--navy); }
+.group-bar span.over { background: var(--warn); }
+.group .sub { font-size: 12px; color: var(--slate); }
+
+.printed { margin: 8px 0 0; font-size: 12px; }
+
+/* The account goes under the item's name on a phone (its column on wider screens). */
+.acct-sub { display: none; }
+#items td:first-child { white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .two { grid-template-columns: minmax(0, 1fr); }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  #items .col-acct { display: none; }
+  #items .acct-sub { display: block; }
+}
+@media (max-width: 560px) {
+  .report-head h1 { font-size: 28px; }
+  .field select { min-width: 0; width: 100%; }
+  .field { flex: 1 1 100%; }
+  #print { margin-left: 0; }
+  .tiles strong { font-size: 20px; }
+}
+
+/* Printing: the report alone, on white. */
+@media print {
+  body { background: #fff; }
+  .site-header .bar, .site-footer, .controls, .table-view, .chart-tip { display: none !important; }
+  .site-header { background: #fff; }
+  .report-head { color: var(--ink); padding: 0 0 12px; }
+  .report-head h1 { color: var(--navy); }
+  .report-head .lede { color: var(--slate); }
+  .kicker { color: var(--slate); }
+  .card, .tiles .tile { break-inside: avoid; box-shadow: none; }
+  .scroll { overflow: visible; }
+}
